@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🥞 Curls OS - Virtual Engine v0.4
 
-## Getting Started
+Curls OS is an experimental, strictly architected operating system kernel designed for the **32-bit x86 architecture**. This project hosts the kernel in a high-performance web environment, allowing for interactive exploration of low-level systems concepts directly in the browser via the [V86](https://github.com/copy/v86) emulation engine.
 
-First, run the development server:
+![Curls OS Banner](https://img.shields.io/badge/Status-Alpha-yellow?style=for-the-badge)
+![Architecture](https://img.shields.io/badge/Arch-x86_32--bit-blue?style=for-the-badge)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project Vision
+To build a verifiable, strictly architected operating system kernel that serves as a pedagogical foundation for systems programming, to build a base OS and a stable K-ABI and U-ABI that can be used as a foundation for fast and secure prototyping of niche operating systems. Curls OS adheres to strict architectural contracts, demonstrating that "hobby" systems can still maintain internal purity and robust invariants.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Key Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Kernel Core
+*   **Preemptive Multitasking**: Round-robin scheduler with task prioritization.
+*   **Virtual Memory Management**: Robust Paging, Physical Memory Manager (PMM), and Kernel Heap.
+*   **Strict Ring Isolation**: Hard boundary between Kernel (Ring 0) and User (Ring 3) using specialized trampolines. All user-kernel transitions occur via explicit syscall or interrupt gates. The kernel never implicitly trusts user pointers or stack data.
+*   **Virtual File System (VFS)**: Integrated initrd (RAMFS) supporting standard file operations.
 
-## Learn More
+### Web Environment
+*   **V86 Terminal Bridge**: Direct serial COM1 integration for reliable keyboard input and high-speed text rendering.
+*   **Interactive Command Panel**: Side-panel shortcuts for common shell commands (HELP, LS, CAT, PS, MEM).
+*   **Retro Aesthetics**: CRT-inspired UI with subtle scanlines, pixelated rendering, and glow effects.
+*   **Automated Scaling**: Fluid layout engine that keeps the emulator constrained and responsive.
 
-To learn more about Next.js, take a look at the following resources:
+## Technical Stack
+*   **Frontend**: [Next.js 15+](https://nextjs.org/) (App Router), React 19, TypeScript.
+*   **Styling**: [Tailwind CSS 4.0+](https://tailwindcss.com/) with custom retro-design tokens.
+*   **Emulation**: [V86 Engine](https://github.com/copy/v86) (WASM-based x86 emulation).
+*   **Deployment**: Optimized for Vercel/Static hosting.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## System Invariants & Testing
+Curls OS is built around the `CORE_V1` invariant suite. The system continuously verifies:
+*   **Memory Integrity**: Page table validity and heap boundary checks.
+*   **Task State**: Verified context switching and stack isolation.
+*   **ABI Stability**: Frozen K-ABI/U-ABI contracts to ensure long-term binary compatibility.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Development
 
-## Deploy on Vercel
+### Prerequisites
+*   Node.js 18.x or later
+*   npm / yarn / pnpm
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Setup
+1. Clone the repository.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Run the development server:
+   ```bash
+   npm run dev
+   ```
+4. Access the emulator at `http://localhost:3000/emulator`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Roadmap & Open Source
+Curls OS is currently closed source. We are holding back the source repository until we achieve stability in our primary ABIs:
+1.  **Stable K-ABI**: Finalized interface for kernel modules/drivers.
+2.  **Stable U-ABI**: Frozen syscall table and process lifecycle contract.
+
+*Once these milestones are met, the full kernel source will be released under an open-source license. The kernel binary (`os-image.bin`) is prebuilt and shipped as part of this repository. Curls OS is a research and educational kernel. It is not intended for production use.*
+
+---
+**Curls OS Virtual Engine v0.4**
+*Behavior reflects ABI guarantees, not implementation details.*
