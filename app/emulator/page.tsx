@@ -10,6 +10,11 @@ export default function EmulatorPage() {
     const sendCommand = (cmd: string) => {
         const emulator = (window as any).emulator_instance;
         if (emulator) {
+            if (cmd === 'CTRL+C') {
+                // Inject scancodes directly to trigger the hardware ISR
+                emulator.keyboard_send_scancodes([0x1D, 0x2E, 0xAE, 0x9D]);
+                return;
+            }
             // Send each character
             for (let i = 0; i < cmd.length; i++) {
                 emulator.serial0_send(cmd[i]);
@@ -90,6 +95,7 @@ export default function EmulatorPage() {
                                     <CommandItem cmd="PS" desc="List all active processes and their states." shortcut="Task list" />
                                     <CommandItem cmd="KILL" desc="Terminate a process by its Process ID." shortcut="Kill PID" />
                                     <CommandItem cmd="USER" desc="Switch to Ring 3 (User Mode) via trampoline." shortcut="Ring 3" />
+                                    <CommandItem cmd="CTRL+C" desc="Send Interrupt signal to active process." shortcut="Interrupt" />
                                 </ul>
                             </div>
 
