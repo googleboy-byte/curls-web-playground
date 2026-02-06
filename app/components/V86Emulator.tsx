@@ -57,6 +57,24 @@ const V86Emulator = () => {
 
             // Bridge to serial port COM1 (serial0)
             // This bypasses PS/2 emulation to match -nographic setups and fix spacebar issues.
+            // Handle Control Characters (Ctrl + Key)
+            if (e.ctrlKey) {
+                const key = e.key.toLowerCase();
+                if (key === 'c') {
+                    // Send PS/2 Scancodes for Ctrl+C to trigger the kernel's keyboard signal handler
+                    // This avoids sending ASCII 3 (which looks like a heart in CP437 VGA)
+                    // [LCtrl Make, C Make, C Break, LCtrl Break]
+                    emulator.keyboard_send_scancodes([0x1D, 0x2E, 0xAE, 0x9D]);
+                    return;
+                } else if (key === 'l') {
+                    emulator.serial0_send('\x0c'); // FF - Form Feed (Ctrl+L)
+                    return;
+                } else if (key === 'd') {
+                    emulator.serial0_send('\x04'); // EOT - End of Transmission (Ctrl+D)
+                    return;
+                }
+            }
+
             if (e.key.length === 1) {
                 // Standard characters: alphabets, numbers, space, symbols
                 emulator.serial0_send(e.key);
